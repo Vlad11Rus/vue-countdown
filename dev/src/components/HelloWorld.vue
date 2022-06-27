@@ -1,43 +1,54 @@
-<script setup>
-defineProps({
-  msg: {
-    type: String,
-    required: true,
-  },
-});
-</script>
-
 <template>
-  <div class="greetings">
-    <h1 class="green">{{ msg }}</h1>
-    <h3>
-      You’ve successfully created a project with
-      <a target="_blank" href="https://vitejs.dev/">Vite</a> +
-      <a target="_blank" href="https://vuejs.org/">Vue 3</a>.
-    </h3>
-  </div>
+  <p style="color:azure">
+    {{ diff.day }} days,
+    {{ diff.hour }} hours, {{ diff.minute }} minute, {{ diff.second }} seconds
+  </p>
+  
+  <label for="time"></label>
+  <progress id="time" value="" max="100">  </progress>
+
 </template>
-
-<style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  top: -10px;
-}
-
-h3 {
-  font-size: 1.2rem;
-}
-
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
-
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
-}
-</style>
+<script>
+const futureDate = new Date(2022, 6, 1);
+const getDateDiff = (date1, date2) => {
+  const diff = new Date(date2.getTime() - date1.getTime());
+  return {
+    year: diff.getUTCFullYear() - 1970,
+    month: diff.getUTCMonth(),
+    day: diff.getUTCDate() - 1,
+    hour: diff.getUTCHours(),
+    minute: diff.getUTCMinutes(),
+    second: diff.getUTCSeconds(),
+  };
+};
+export default {
+  name: "App",
+  data() {
+    return {
+      futureDate,
+      diff: {},
+      timer: undefined,
+    };
+  },
+  methods: {
+    getDiff() {
+      this.diff = getDateDiff(new Date(), futureDate);
+    },
+    formatDate(date) {
+      let d = new Date(date),
+        month = (d.getMonth() + 1).toString(),
+        day = d.getDate().toString(),
+        year = d.getFullYear().toString();
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+      return [year, month, day].join("-");
+    },
+  },
+  beforeMount() {
+    this.timer = setInterval(this.getDiff, 1000);
+  },
+  beforeUnmount() {
+    clearInterval(this.timer);
+  },
+};
+</script>
