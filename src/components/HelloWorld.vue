@@ -5,7 +5,7 @@
   </p>
   
   <label for="time"></label>
-  <progress id="time" value="diff" max="100"> </progress>
+  <progress id="time" value="diff" max="100"></progress>
 
 </template>
 <script>
